@@ -3,7 +3,8 @@ set -e
 
 if [ "$1" = 'start' ]; then
 
-    ./${FILEBEAT_HOME}/filebeat -e -c filebeat.yml &
+    cd ${FILEBEAT_HOME}
+    ./filebeat -e -c filebeat.yml &
 
     cd ${APPLICATION_HOME}
 
