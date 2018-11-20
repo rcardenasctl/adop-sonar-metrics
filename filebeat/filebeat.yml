@@ -1,0 +1,15 @@
+---
+filebeat.inputs:
+- type: log 
+  tags: ['sonar-metrics']
+  json.keys_under_root: true
+  json.add_error_key: true
+  paths:
+    - "${SONAR_LOGS_PATH}*.json"
+  
+processors:
+- add_cloud_metadata:
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  hosts: ["${LOGSTASH_HOST}"]
