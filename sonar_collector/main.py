@@ -17,7 +17,8 @@ def main():
     components = SonarComponentMonitor(monitor)
     project_measures = SonarProjectMeasure(monitor)
 
-    COMPONENTS_QUALIFIERS = ('BRC', 'DIR', 'FIL', 'TRK', 'UTS')
+    # More qualifiers, BRC, 'DIR', 'FIL', 'TRK', 'UTS')
+    COMPONENTS_QUALIFIERS = ('TRK')
     components = components.get_components(qualifiers=COMPONENTS_QUALIFIERS)
 
     for component in components:
