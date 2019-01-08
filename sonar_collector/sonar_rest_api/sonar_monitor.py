@@ -2,25 +2,31 @@ import requests
 import default
 from status_codes import *
 from http_exceptions import *
+from sonar_exceptions import InvalidAuthentication
 
 
 class SonarMonitor:
-    
-    def __init__(self, sonar_host=None, sonar_port=None, sonar_base_path=None, sonar_token=None):
 
-        self._sonar_host = sonar_host or default.SONAR_HOST
-        self._sonar_port = sonar_port or default.SONAR_PORT
-        self._sonar_base_path = sonar_base_path or default.SONAR_BASE_PATH
+    def __init__(self, sonar_host=None, sonar_port=None, sonar_base_path=None, username=None, password=None):
+
+        self._sonar_host = sonar_host
+        self._sonar_port = sonar_port
+        self._sonar_base_path = sonar_base_path
         self._session = requests.Session()
 
-        if sonar_token:
-            self._session.auth = sonar_token, ''
+        if username != None:
+            # password is empty when username works as token id.
+            # So credentials works like:
+            #       self._session.auth = token, '' where token is username
+            self._session.auth = username, password
+        else:
+            raise InvalidAuthentication()
 
     def build_url(self, endpoint):
         if self._sonar_port:
             return '{}:{}{}{}'.format(self._sonar_host, self._sonar_port, self._sonar_base_path, endpoint)
         return '{}{}{}'.format(self._sonar_host, self._sonar_base_path, endpoint)
-    
+
     def get_response_by_params(self, method, url, **params):
         # Get method and make the call
         call = getattr(self._session, method.lower())
