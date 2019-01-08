@@ -9,8 +9,8 @@ import os
 def main():
 
     SONAR_HOST = os.environ.get('SONAR_HOST')
-    SONAR_USERNAME = os.environ.get('USERNAME')
-    SONAR_PASSWORD = os.environ.get('PASSWORD')
+    SONAR_USERNAME = os.environ.get('SONAR_USERNAME')
+    SONAR_PASSWORD = os.environ.get('SONAR_PASSWORD')
     SONAR_LOGS_PATH = os.environ.get('SONAR_LOGS_PATH')
     monitor = SonarMonitor(
         sonar_host=SONAR_HOST, sonar_base_path="/sonar", username=SONAR_USERNAME, password=SONAR_PASSWORD)
