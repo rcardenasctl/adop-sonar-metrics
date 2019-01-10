@@ -1,12 +1,16 @@
-import os, json, datetime
+import os
+import json
+import datetime
 
-def writeLogs(data, path):
+
+def write(data, path):
 
     # Check first path does not exists
     if not os.path.exists(path):
         os.makedirs(path)
-    
-    logs_path = os.path.join(path, datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.json')
+
+    logs_path = os.path.join(
+        path, datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.json')
     with open(logs_path, "a+") as log_file:
         log_file.write(json.dumps(data))
         # add an extra line in order to avoid issues with Logstash

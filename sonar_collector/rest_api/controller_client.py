@@ -2,6 +2,9 @@ import requests
 from status_codes import *
 from http_exceptions import *
 from exceptions import InvalidAuthentication
+import logging
+
+logger = logging.getLogger('sonar-logs')
 
 
 class ControllerClient:
@@ -13,18 +16,31 @@ class ControllerClient:
         self._sonar_base_path = sonar_base_path
         self._session = requests.Session()
 
+        logger.info("Create client controller for sonar server: {}{}".format(
+            self._sonar_host, self._sonar_base_path))
+
         if username != None:
             # password is empty when username works as token id.
             # So credentials works like:
             #       self._session.auth = token, '' where token is username
             self._session.auth = username, password
+            logger.info(
+                "Creating credentials with username/password")
         else:
             raise InvalidAuthentication()
 
     def build_url(self, endpoint):
+        new_url = None
         if self._sonar_port:
-            return '{}:{}{}{}'.format(self._sonar_host, self._sonar_port, self._sonar_base_path, endpoint)
-        return '{}{}{}'.format(self._sonar_host, self._sonar_base_path, endpoint)
+            new_url = '{}:{}{}{}'.format(
+                self._sonar_host, self._sonar_port, self._sonar_base_path, endpoint)
+        else:
+            new_url = '{}{}{}'.format(
+                self._sonar_host, self._sonar_base_path, endpoint)
+
+        logger.info("Created endpoint: {url_endpoint}".format(
+            url_endpoint=new_url))
+        return new_url
 
     def get_response_by_params(self, method, url, **params):
         # Get method and make the call
