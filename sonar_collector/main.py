@@ -2,6 +2,7 @@ from rest_api.controller_client import ControllerClient
 from rest_api.component_client import ComponentClient
 from rest_api.svg_badges_client import SvgBadgesClient
 from rest_api.exceptions import UnknowMeasureMetric
+from rest_api.http_exceptions import *
 import serializer.logger
 import watcher.logger
 import logging
@@ -43,8 +44,14 @@ def main():
 
             serializer.logger.write(component, SONAR_DATA_LOGS)
 
-    except Exception as error:
-        logger.error(error.message)
+    except AuthenticationError as error:
+        logger.error("Authentication Error. Verify credentials provided")
+    except NotFoundError as error:
+        logger.error("Resource Not Found. Check query url and query executed")
+    except ClientError as error:
+        logger.error("Client error related with 4xx")
+    except ServerError as error:
+        logger.error("Server error related with 5xx")
 
 
 if __name__ == "__main__":
