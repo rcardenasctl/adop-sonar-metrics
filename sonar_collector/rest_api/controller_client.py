@@ -1,11 +1,10 @@
 import requests
-import default
 from status_codes import *
 from http_exceptions import *
-from sonar_exceptions import InvalidAuthentication
+from exceptions import InvalidAuthentication
 
 
-class SonarMonitor:
+class ControllerClient:
 
     def __init__(self, sonar_host=None, sonar_port=None, sonar_base_path=None, username=None, password=None):
 

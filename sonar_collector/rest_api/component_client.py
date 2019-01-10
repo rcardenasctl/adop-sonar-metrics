@@ -1,12 +1,9 @@
-from sonar_monitor import SonarMonitor
-
-
-class SonarComponentMonitor:
+class ComponentClient:
 
     COMPONENTS_SEARCH_ENDPOINT = '/api/components/search'
 
-    def __init__(self, sonar_monitor):
-        self._sonar_monitor = sonar_monitor
+    def __init__(self, controller_client):
+        self._controller_client = controller_client
 
     def get_components(self, query_param=None, qualifiers=None):
 
@@ -27,12 +24,13 @@ class SonarComponentMonitor:
         params['p'] = page_index
         params['ps'] = page_size
 
-        url = self._sonar_monitor.build_url(self.COMPONENTS_SEARCH_ENDPOINT)
+        url = self._controller_client.build_url(
+            self.COMPONENTS_SEARCH_ENDPOINT)
 
         # Looping all the pages looking for components
         while page_index * page_size < page_total:
             # Update paging information for calculation
-            res = self._sonar_monitor.get_response_by_params(
+            res = self._controller_client.get_response_by_params(
                 'get', url, **params).json()
             page_index = res['paging']['pageIndex']
             page_size = res['paging']['pageSize']
