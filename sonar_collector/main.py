@@ -16,7 +16,6 @@ import watcher.logger
 import logging
 import os
 
-
 def main():
 
     SONAR_HOST = os.environ.get('SONAR_HOST')
@@ -33,9 +32,6 @@ def main():
 
     component_client = ComponentClient(controller_client)
     component_controller = Component(component_client)
-
-    svg_measures_client = SvgBadgesClient(controller_client)
-    svg_measures_controller = SvGBadges(svg_measures_client)
 
     measure_client = MeasureClient(controller_client)
     measure_controller = Measure(measure_client)

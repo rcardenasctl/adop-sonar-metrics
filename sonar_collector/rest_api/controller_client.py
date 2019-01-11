@@ -37,15 +37,15 @@ class ControllerClient:
         else:
             new_url = '{}{}{}'.format(
                 self._sonar_host, self._sonar_base_path, endpoint)
-
-        logger.info("Created endpoint: {url_endpoint}".format(
-            url_endpoint=new_url))
         return new_url
 
     def get_response_by_params(self, method, url, **params):
         # Get method and make the call
         call = getattr(self._session, method.lower())
         self._session.params = params
+
+        logger.info("Calling endpoint: {url} with params {params}" .format(
+            url=url, params=params))
         res = call(url)
 
         if res.status_code < HTTP_300:
