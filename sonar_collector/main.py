@@ -1,6 +1,14 @@
 from rest_api.controller_client import ControllerClient
 from rest_api.component_client import ComponentClient
 from rest_api.svg_badges_client import SvgBadgesClient
+from rest_api.measure_client import MeasureClient
+from rest_api.issue_client import IssueClient
+
+from controllers.component import Component
+from controllers.svg_badges import SvGBadges
+from controllers.measure import Measure
+from controllers.issue import Issue
+
 from rest_api.exceptions import UnknowMeasureMetric
 from rest_api.http_exceptions import *
 import serializer.logger
@@ -24,25 +32,34 @@ def main():
         sonar_host=SONAR_HOST, sonar_base_path="/sonar", username=SONAR_USERNAME, password=SONAR_PASSWORD)
 
     component_client = ComponentClient(controller_client)
-    svg_measures_client = SvgBadgesClient(controller_client)
+    component_controller = Component(component_client)
 
-    COMPONENTS_QUALIFIERS = ('TRK')
+    svg_measures_client = SvgBadgesClient(controller_client)
+    svg_measures_controller = SvGBadges(svg_measures_client)
+
+    measure_client = MeasureClient(controller_client)
+    measure_controller = Measure(measure_client)
+
+    issue_client = IssueClient(controller_client)
+    issue_controller = Issue(issue_client)
+
+    sonar_data_result = {}
 
     try:
-        components = component_client.get_components(
-            qualifiers=COMPONENTS_QUALIFIERS)
+        components = component_controller.get_all_components()
 
-        for component in components:
-            try:
-                all_measures = svg_measures_client.get_all_measures(
-                    key_param=component['key'])
-                for measure in all_measures:
-                    component.update(measure)
+        components_collection = [component for component in components]
 
-            except UnknowMeasureMetric as missing_metric:
-                logger.error(missing_metric.message)
+        measure_results = measure_controller.get_all_measure_by_components(
+            components_collection)
 
-            serializer.logger.write(component, SONAR_DATA_LOGS)
+        issues_results = issue_controller.get_all_issue_severity_per_component(
+            components_collection)
+
+        sonar_data_result.update(measure_results)
+        sonar_data_result.update(issues_results)
+
+        serializer.logger.write(sonar_data_result, SONAR_DATA_LOGS)
 
     except AuthenticationError as error:
         logger.error("Authentication Error. Verify credentials provided")
