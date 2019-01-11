@@ -26,6 +26,7 @@ def main():
 
     watcher.logger.init(SONAR_LOGS_PATH)
     logger = logging.getLogger('sonar-logs')
+    logger.info("Starting sonar metrics collection")
 
     controller_client = ControllerClient(
         sonar_host=SONAR_HOST, sonar_base_path="/sonar", username=SONAR_USERNAME, password=SONAR_PASSWORD)
@@ -65,6 +66,9 @@ def main():
         logger.error("Client error related with 4xx")
     except ServerError as error:
         logger.error("Server error related with 5xx")
+
+    logger.info("Successfull metrics collection")
+    return 0
 
 
 if __name__ == "__main__":
