@@ -5,7 +5,7 @@ filebeat.inputs:
   json.keys_under_root: true
   json.add_error_key: true
   paths:
-    - "${SONAR_LOGS_PATH}*.json"
+    - "${SONAR_DATA_LOGS}/*.json"
   
 processors:
 - add_cloud_metadata:
