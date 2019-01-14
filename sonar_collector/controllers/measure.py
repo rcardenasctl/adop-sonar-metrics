@@ -7,7 +7,8 @@ class Measure:
     def get_all_measure_by_components(self, components):
         measure_results = {
             'ncloc': 0,
-            'sqale_index': 0
+            'sqale_index': 0,
+            'coverage': 0
         }
 
         for component in components:
@@ -18,6 +19,6 @@ class Measure:
                 for key, value in measure.iteritems():
                     if key in measure_results:
                         measure_results[key] = measure_results[key] + \
-                            int(measure[key])
+                            float(measure[key])
 
         return measure_results

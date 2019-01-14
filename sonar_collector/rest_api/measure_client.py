@@ -9,7 +9,8 @@ class MeasureClient:
 
     MEASURE_COLLECTION = (
         'ncloc',  # Lines of code
-        'sqale_index'  # technical debts
+        'sqale_index',  # technical debts
+        'coverage'  # code coverage
     )
 
     def __init__(self, client):
